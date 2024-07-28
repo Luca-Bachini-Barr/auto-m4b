@@ -25,6 +25,9 @@ userid="$(id -u $username)"
 groupid="$(id -g $username)"
 chown -R $userid:$groupid /temp 
 
+echo $PWD
+echo $(pwd)
+
 #adjust the number of cores depending on the ENV CPU_CORES
 if [ -z "$CPU_CORES" ]
 then
