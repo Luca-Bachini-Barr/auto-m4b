@@ -25,7 +25,10 @@ userid="$(id -u $username)"
 groupid="$(id -g $username)"
 chown -R $userid:$groupid /temp 
 
+echo "Beginning Process"
 echo $PWD
+
+echo "InputFolder = $inputfolder"
 echo $(pwd)
 
 #adjust the number of cores depending on the ENV CPU_CORES
