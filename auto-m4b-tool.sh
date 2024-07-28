@@ -11,6 +11,8 @@ binfolder="${BIN_FOLDER:-"/temp/delete/"}"
 m4bend=".m4b"
 logend=".log"
 
+echo "Ensuring Folder Created: $inputfolder"
+
 #ensure the expected folder-structure
 mkdir -p "$inputfolder"
 mkdir -p "$outputfolder"
@@ -45,8 +47,12 @@ else
 	  sleeptime="$SLEEPTIME"
 fi
 
+echo "Changing to directory: $inputfolder FROM=$PWD"
+
 #change to the merge folder, keeps this clear and the script could be kept inside the container
 cd "$inputfolder" || return
+
+echo "New PWD: $PWD"
 
 # continue until $m  5
 while [ $m -ge 0 ]; do
@@ -120,11 +126,7 @@ while [ $m -ge 0 ]; do
 	# clear the folders
 	rm -r "$binfolder"* 2>/dev/null
 	
-	echo "Beginning Process"
-  echo $PWD
-  
-  echo "InputFolder = $inputfolder"
-  echo $(pwd)
+	echo "Checking Directory $PWD"
 
 	if ls -d */ 2>/dev/null; then
 		echo Folder Detected
