@@ -25,12 +25,6 @@ userid="$(id -u $username)"
 groupid="$(id -g $username)"
 chown -R $userid:$groupid /temp 
 
-echo "Beginning Process"
-echo $PWD
-
-echo "InputFolder = $inputfolder"
-echo $(pwd)
-
 #adjust the number of cores depending on the ENV CPU_CORES
 if [ -z "$CPU_CORES" ]
 then
@@ -125,6 +119,12 @@ while [ $m -ge 0 ]; do
 
 	# clear the folders
 	rm -r "$binfolder"* 2>/dev/null
+	
+	echo "Beginning Process"
+  echo $PWD
+  
+  echo "InputFolder = $inputfolder"
+  echo $(pwd)
 
 	if ls -d */ 2>/dev/null; then
 		echo Folder Detected
