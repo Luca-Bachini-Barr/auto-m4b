@@ -15,8 +15,8 @@ send_notifiarr() {
   local title="$1"
   local description="$2"
   local color="$3"
-  local channel_id="${NOTIFIARR_CHANNEL_ID:-xxxxxxxxxxxxxx}"
-  local url="${NOTIFIARR_URL:-https://notifiarr.com/api/v1/notification/passthrough/xxxxxxxxxxxxxxx}"
+  local channel_id="${NOTIFIARR_CHANNEL_ID}"
+  local url="${NOTIFIARR_URL}"	
 
   curl -s -X POST "$url" \
     -H "Content-Type: application/json" \
