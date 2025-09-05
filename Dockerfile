@@ -1,4 +1,4 @@
-FROM phusion/baseimage:jammy-1.0.1
+FROM phusion/baseimage:noble-1.0.2
 #FROM phusion/baseimage:master
 
 #Basic Container
@@ -99,6 +99,8 @@ RUN echo "---- INSTALL M4B-TOOL DEPENDENCIES ----" && \
     php-json \
     php-mbstring \
     php-xml \
+    php-curl \
+    php-zip \
     libxcb-shm0-dev \
     libxcb-xfixes0-dev \
     libasound-dev \

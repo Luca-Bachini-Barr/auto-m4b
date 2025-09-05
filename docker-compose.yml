@@ -5,10 +5,10 @@ services:
     build: .
     container_name: auto-m4b
     volumes:
-      - ./config:/config
-      - ./temp:/temp
+      - /Users/johnbachinibarr/docker/auto-m4b/config:/config
+      - /Users/johnbachinibarr/docker/auto-m4b/temp:/temp
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=501
+      - PGID=20
       - CPU_CORES=2
       - MAKE_BACKUP=N

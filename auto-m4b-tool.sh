@@ -11,6 +11,39 @@ binfolder="${BIN_FOLDER:-"/temp/delete/"}"
 m4bend=".m4b"
 logend=".log"
 
+send_notifiarr() {
+  local title="$1"
+  local description="$2"
+  local color="$3"
+  local channel_id="${NOTIFIARR_CHANNEL_ID:-1411881120093442131}"
+  local url="${NOTIFIARR_URL:-https://notifiarr.com/api/v1/notification/passthrough/4aa282ef-0f88-4ac6-a826-73cc352cb7e6}"
+
+  curl -s -X POST "$url" \
+    -H "Content-Type: application/json" \
+    -d "{
+      \"notification\": {
+        \"update\": false,
+        \"name\": \"auto-m4b-tool\"
+      },
+      \"discord\": {
+        \"color\": \"$color\",
+        \"text\": {
+          \"title\": \"$title\",
+          \"description\": \"$description\"
+        },
+        \"ids\": {
+          \"channel\": $channel_id
+        }
+      }
+    }"
+}
+
+# Get duration of an audio file in seconds
+get_audio_duration() {
+local file="$1"
+ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$file"
+}
+
 echo "Ensuring Folder Created: $inputfolder"
 
 #ensure the expected folder-structure
@@ -132,6 +165,7 @@ while [ $m -ge 0 ]; do
 		echo Folder Detected
 		for book in *; do
 			if [ -d "$book" ]; then
+				send_notifiarr "Processing" "Processing of AudioBooks has started." "3498db" # blue
 				mpthree=$(find "$book" -maxdepth 2 -type f \( -name '*.mp3' -o -name '*.m4b' \) | head -n 1)
 				m4bfile="$outputfolder$book/$book$m4bend"
 				logfile="$outputfolder$book/$book$logend"
@@ -149,7 +183,6 @@ while [ $m -ge 0 ]; do
 					m4b-tool merge "$book" -n -q --audio-bitrate="$bit" --skip-cover --use-filenames-as-chapters --no-chapter-reindexing --audio-codec=libfdk_aac --jobs="$CPUcores" --output-file="$m4bfile" --logfile="$logfile"
 					mv "$inputfolder$book" "$binfolder"
 				fi
-				echo Finished Converting
 				#make sure all single file m4b's are in their own folder
 				echo Putting the m4b into a folder
 				for file in $outputfolder*.m4b; do
@@ -158,6 +191,11 @@ while [ $m -ge 0 ]; do
 						mv "$file" "${file%.*}"
 					fi
 				done
+				# Get audiobook duration and format as HH:MM:SS
+                duration_seconds=$(get_audio_duration "$m4bfile")
+                duration_formatted=$(printf '%02d:%02d:%02d\n' $((duration_seconds/3600)) $((duration_seconds%3600/60)) $((duration_seconds%60)))
+				send_notifiarr "Conversion Complete" "Finished converting $book to m4b." "2ecc71" # green
+				echo Finished Converting
 				echo Deleting duplicate mp3 audiobook folder
 			fi
 		done
