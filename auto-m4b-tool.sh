@@ -13,10 +13,11 @@ logend=".log"
 
 # --- Notifiarr notification function ---
 send_notifiarr() {
-  local title="$1"           # Notification title (can include emoji)
-  local description="$2"     # Main description/message
-  local color="$3"           # 6-digit HTML color code (e.g., "2ecc71")
-  local emoji="$4"           # Emoji for title (optional)
+  local title="$1"
+  local description="$2"
+  local color="$3"
+  local emoji="$4"
+  local image_url="$5"   # <-- new parameter for artwork URL
   local url="https://notifiarr.com/api/v1/notification/passthrough/4aa282ef-0f88-4ac6-a826-73cc352cb7e6"
   local channel_id="1411881120093442131"
 
@@ -30,7 +31,7 @@ send_notifiarr() {
       \"discord\": {
         \"color\": \"$color\",
         \"images\": {
-          \"thumbnail\": \"\",
+          \"thumbnail\": \"$image_url\",
           \"image\": \"\"
         },
         \"text\": {
@@ -175,11 +176,16 @@ while [ $m -ge 0 ]; do
         for book in *; do
             if [ -d "$book" ]; then
                 # --- Notifiarr: Processing started ---
-                send_notifiarr "Processing Started" "🔄 Processing of $book started." "3498db" "🔵"
-
+				send_notifiarr "Processing Started" "🔄 Processing of $book started." "3498db" "🔵" "$artwork_url""
                 mpthree=$(find "$book" -maxdepth 2 -type f \( -name '*.mp3' -o -name '*.m4b' \) | head -n 1)
                 m4bfile="$outputfolder$book/$book$m4bend"
                 logfile="$outputfolder$book/$book$logend"
+				# Extract cover image (if present)
+				cover_path="/temp/artwork/cover-${book}.jpg"
+				ffmpeg -y -i "$mpthree" -an -vcodec copy "$cover_path" 2>/dev/null
+
+				# Build the artwork URL (assuming you mapped 4569:8080 in docker-compose)
+				artwork_url="http://localhost:8080/cover-${book}.jpg"
                 chapters=$(ls "$inputfolder$book"/*chapters.txt 2> /dev/null | wc -l)
                 if [ "$chapters" != "0" ]; then
                     echo Adjusting Chapters
@@ -206,7 +212,7 @@ while [ $m -ge 0 ]; do
                 duration_seconds=$(get_audio_duration "$m4bfile")
                 duration_formatted=$(printf '%02d:%02d:%02d\n' $((duration_seconds/3600)) $((duration_seconds%3600/60)) $((duration_seconds%60)))
                 # --- Notifiarr: Conversion complete ---
-                send_notifiarr "Conversion Complete" "✅ Finished converting $book to m4b. Duration: $duration_formatted" "2ecc71" "✅"
+                send_notifiarr "Conversion Complete" "✅ Finished converting $book to m4b. Duration: $duration_formatted" "2ecc71" "✅" "$artwork_url"
                 echo Finished Converting
                 echo Deleting duplicate mp3 audiobook folder
             fi
