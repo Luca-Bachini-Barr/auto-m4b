@@ -108,6 +108,12 @@ RUN echo "---- INSTALL M4B-TOOL DEPENDENCIES ----" && \
     libva-dev \
     libvdpau-dev
 
+# Create a directory for artwork
+RUN mkdir -p /temp/artwork
+
+# Expose port 8080 for the artwork web server
+EXPOSE 8080
+
 #Mount volumes
 VOLUME /temp
 VOLUME /config
@@ -127,4 +133,5 @@ RUN echo "---- INSTALL M4B-TOOL ----" \
 
 #use the remommended clean command
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 

@@ -7,6 +7,10 @@ user_name="autom4b"
 user_id="1001"
 group_id="100"
 
+# Start a simple HTTP server to serve artwork in the background
+python3 -m http.server 8080 --directory /temp/artwork &
+
+
 # Create user if they don't exist
 if ! id -u "${PUID}" &>/dev/null; then
     # If PUID is a number, create a user with that id
