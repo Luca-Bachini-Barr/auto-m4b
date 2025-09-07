@@ -3,6 +3,8 @@
 #file="/temp/mp3merge/auto-m4b-tool.sh"
 #cp -u /auto-m4b-tool.sh /temp/mp3merge/auto-m4b-tool.sh
 
+set -x
+
 # Log the start of the script
 echo "runscript.sh started at $(date)" >> /config/service.log
 
