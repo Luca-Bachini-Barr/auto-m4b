@@ -22,8 +22,8 @@ send_notifiarr() {
   local color="$3"
   local emoji="$4"
   local image_url="$5"   # <-- new parameter for artwork URL
-  local url="https://notifiarr.com/api/v1/notification/passthrough/4aa282ef-0f88-4ac6-a826-73cc352cb7e6"
-  local channel_id="1411881120093442131"
+  local url="$notifiarr_url"
+  local channel_id="$Notifiarr_channel_id"
 
   curl -s -X POST "$url" \
     -H "Content-Type: application/json" \
