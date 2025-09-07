@@ -190,12 +190,12 @@ while [ $m -ge 0 ]; do
                 else
                     echo Sampling $mpthree
                     # --- Notifiarr: Processing started ---
-				            send_notifiarr "Processing Started" "🔄 Processing of $book started." "3498db" "🔵" "$artwork_url"                    				
-				            # Extract cover image (if present)
+                    # Extract cover image (if present)
 				            cover_path="/temp/artwork/cover-${book}.jpg"
 				            ffmpeg -y -i "$mpthree" -an -vcodec copy "$cover_path" 2>/dev/null
 				            # Build the artwork URL (assuming you mapped 4569:8080 in docker-compose)
 				            artwork_url="http://localhost:8080/cover-${book}.jpg"
+				            send_notifiarr "Processing Started" "🔄 Processing of $book started." "3498db" "🔵" "$artwork_url"                    				
                     mpthree=$(find "$book" -maxdepth 2 -type f \( -name '*.mp3' -o -name '*.m4b' \) | head -n 1)
                     bit=$(ffprobe -hide_banner -loglevel 0 -of flat -i "$mpthree" -select_streams a -show_entries format=bit_rate -of default=noprint_wrappers=1:nokey=1)
                     echo Bitrate = $bit
@@ -203,6 +203,11 @@ while [ $m -ge 0 ]; do
                     echo Starting Conversion
                     m4b-tool merge "$book" -n -q --audio-bitrate="$bit" --skip-cover --use-filenames-as-chapters --no-chapter-reindexing --audio-codec=libfdk_aac --jobs="$CPUcores" --output-file="$m4bfile" --logfile="$logfile"
                     mv "$inputfolder$book" "$binfolder"
+                    # Get audiobook duration and format as HH:MM:SS
+                    duration_seconds=$(get_audio_duration "$m4bfile")
+                    duration_formatted=$(printf '%02d:%02d:%02d\n' $((duration_seconds/3600)) $((duration_seconds%3600/60)) $((duration_seconds%60)))
+                    # --- Notifiarr: Conversion complete ---
+                    send_notifiarr "Conversion Complete" "✅ Finished converting $book to m4b. Duration: $duration_formatted" "2ecc71" "✅" "$artwork_url"
                 fi
                 #make sure all single file m4b's are in their own folder
                 echo Putting the m4b into a folder
@@ -212,11 +217,6 @@ while [ $m -ge 0 ]; do
                         mv "$file" "${file%.*}"
                     fi
                 done
-                # Get audiobook duration and format as HH:MM:SS
-                duration_seconds=$(get_audio_duration "$m4bfile")
-                duration_formatted=$(printf '%02d:%02d:%02d\n' $((duration_seconds/3600)) $((duration_seconds%3600/60)) $((duration_seconds%60)))
-                # --- Notifiarr: Conversion complete ---
-                send_notifiarr "Conversion Complete" "✅ Finished converting $book to m4b. Duration: $duration_formatted" "2ecc71" "✅" "$artwork_url"
                 echo Finished Converting
                 echo Deleting duplicate mp3 audiobook folder
             fi
