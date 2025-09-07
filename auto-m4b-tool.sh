@@ -180,7 +180,7 @@ while [ $m -ge 0 ]; do
         for book in *; do
             if [ -d "$book" ]; then
                 # --- Notifiarr: Processing started ---
-				send_notifiarr "Processing Started" "🔄 Processing of $book started." "3498db" "🔵" "$artwork_url""
+				send_notifiarr "Processing Started" "🔄 Processing of $book started." "3498db" "🔵" "$artwork_url"
                 mpthree=$(find "$book" -maxdepth 2 -type f \( -name '*.mp3' -o -name '*.m4b' \) | head -n 1)
                 m4bfile="$outputfolder$book/$book$m4bend"
                 logfile="$outputfolder$book/$book$logend"

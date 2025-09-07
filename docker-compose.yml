@@ -3,6 +3,8 @@ services:
   auto-m4b:
     build: .
     container_name: auto-m4b
+    ports:
+      - 4569:8080  # Port for the artwork web server
     volumes:
       ./config:/config
       ./temp:/temp
@@ -11,4 +13,7 @@ services:
       - PGID=20
       - CPU_CORES=2
       - MAKE_BACKUP=N
-    image:
+      - NOTIFIARR_CHANNEL_ID=xxxxxxxxxxxxxx
+      - NOTIFIARR_URL=https://notifiarr.com/api/v1/notification/passthrough/xxxxxxxxxxxxxxx
+    restart: unless-stopped
+    image: 
