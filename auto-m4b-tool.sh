@@ -25,7 +25,8 @@ send_notifiarr() {
   local url="$NOTIFIARR_URL"
   local channel_id="$NOTIFIARR_CHANNEL_ID"
 
-  curl -s -X POST "$url" \
+  echo "Sending to $NOTIFIARR_URL, channel $NOTIFIARR_CHANNEL_ID" >> /config/service.log
+  curl  -X POST "$url" \
     -H "Content-Type: application/json" \
     -d "{
       \"notification\": {
