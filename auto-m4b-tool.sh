@@ -179,18 +179,9 @@ while [ $m -ge 0 ]; do
         echo Folder Detected
         for book in *; do
             if [ -d "$book" ]; then
-                # --- Notifiarr: Processing started ---
-				send_notifiarr "Processing Started" "🔄 Processing of $book started." "3498db" "🔵" "$artwork_url"
                 mpthree=$(find "$book" -maxdepth 2 -type f \( -name '*.mp3' -o -name '*.m4b' \) | head -n 1)
                 m4bfile="$outputfolder$book/$book$m4bend"
                 logfile="$outputfolder$book/$book$logend"
-				
-				# Extract cover image (if present)
-				cover_path="/temp/artwork/cover-${book}.jpg"
-				ffmpeg -y -i "$mpthree" -an -vcodec copy "$cover_path" 2>/dev/null
-
-				# Build the artwork URL (assuming you mapped 4569:8080 in docker-compose)
-				artwork_url="http://localhost:8080/cover-${book}.jpg"
                 chapters=$(ls "$inputfolder$book"/*chapters.txt 2> /dev/null | wc -l)
                 if [ "$chapters" != "0" ]; then
                     echo Adjusting Chapters
@@ -198,6 +189,14 @@ while [ $m -ge 0 ]; do
                     mv "$inputfolder$book" "$outputfolder"
                 else
                     echo Sampling $mpthree
+                    # --- Notifiarr: Processing started ---
+				    send_notifiarr "Processing Started" "🔄 Processing of $book started." "3498db" "🔵" "$artwork_url"                    				
+				    # Extract cover image (if present)
+				    cover_path="/temp/artwork/cover-${book}.jpg"
+				    ffmpeg -y -i "$mpthree" -an -vcodec copy "$cover_path" 2>/dev/null
+				    # Build the artwork URL (assuming you mapped 4569:8080 in docker-compose)
+				    artwork_url="http://localhost:8080/cover-${book}.jpg"
+                    mpthree=$(find "$book" -maxdepth 2 -type f \( -name '*.mp3' -o -name '*.m4b' \) | head -n 1)
                     bit=$(ffprobe -hide_banner -loglevel 0 -of flat -i "$mpthree" -select_streams a -show_entries format=bit_rate -of default=noprint_wrappers=1:nokey=1)
                     echo Bitrate = $bit
                     echo The folder "$book" will be merged to "$m4bfile"
