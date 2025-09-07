@@ -111,9 +111,6 @@ RUN echo "---- INSTALL M4B-TOOL DEPENDENCIES ----" && \
 # Create a directory for artwork
 RUN mkdir -p /temp/artwork
 
-# Expose port 8080 for the artwork web server
-EXPOSE 8080
-
 #Mount volumes
 VOLUME /temp
 VOLUME /config
