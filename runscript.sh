@@ -10,7 +10,7 @@ echo "runscript.sh started at $(date)" >> /config/service.log
 
 
 user_name="autom4b"
-user_id="1001"
+user_id="1039"
 group_id="100"
 
 # Start a simple HTTP server to serve artwork in the background
