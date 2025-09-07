@@ -184,6 +184,7 @@ while [ $m -ge 0 ]; do
                 mpthree=$(find "$book" -maxdepth 2 -type f \( -name '*.mp3' -o -name '*.m4b' \) | head -n 1)
                 m4bfile="$outputfolder$book/$book$m4bend"
                 logfile="$outputfolder$book/$book$logend"
+				
 				# Extract cover image (if present)
 				cover_path="/temp/artwork/cover-${book}.jpg"
 				ffmpeg -y -i "$mpthree" -an -vcodec copy "$cover_path" 2>/dev/null
