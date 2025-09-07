@@ -22,8 +22,8 @@ send_notifiarr() {
   local color="$3"
   local emoji="$4"
   local image_url="$5"   # <-- new parameter for artwork URL
-  local url="$notifiarr_url"
-  local channel_id="$Notifiarr_channel_id"
+  local url="$NOTIFIARR_URL"
+  local channel_id="$NOTIFIARR_CHANNEL_ID"
 
   curl -s -X POST "$url" \
     -H "Content-Type: application/json" \
@@ -190,12 +190,12 @@ while [ $m -ge 0 ]; do
                 else
                     echo Sampling $mpthree
                     # --- Notifiarr: Processing started ---
-				    send_notifiarr "Processing Started" "🔄 Processing of $book started." "3498db" "🔵" "$artwork_url"                    				
-				    # Extract cover image (if present)
-				    cover_path="/temp/artwork/cover-${book}.jpg"
-				    ffmpeg -y -i "$mpthree" -an -vcodec copy "$cover_path" 2>/dev/null
-				    # Build the artwork URL (assuming you mapped 4569:8080 in docker-compose)
-				    artwork_url="http://localhost:8080/cover-${book}.jpg"
+				            send_notifiarr "Processing Started" "🔄 Processing of $book started." "3498db" "🔵" "$artwork_url"                    				
+				            # Extract cover image (if present)
+				            cover_path="/temp/artwork/cover-${book}.jpg"
+				            ffmpeg -y -i "$mpthree" -an -vcodec copy "$cover_path" 2>/dev/null
+				            # Build the artwork URL (assuming you mapped 4569:8080 in docker-compose)
+				            artwork_url="http://localhost:8080/cover-${book}.jpg"
                     mpthree=$(find "$book" -maxdepth 2 -type f \( -name '*.mp3' -o -name '*.m4b' \) | head -n 1)
                     bit=$(ffprobe -hide_banner -loglevel 0 -of flat -i "$mpthree" -select_streams a -show_entries format=bit_rate -of default=noprint_wrappers=1:nokey=1)
                     echo Bitrate = $bit
