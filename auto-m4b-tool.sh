@@ -1,4 +1,8 @@
 #!/bin/bash
+
+# Log the start of the script
+echo "auto-m4b-tool.sh started at $(date)" >> /config/service.log
+
 # set m to 1
 m=1
 #variable defenition
@@ -222,3 +226,6 @@ while [ $m -ge 0 ]; do
         sleep $sleeptime
     fi
 done
+
+# Log the end of the script
+echo "auto-m4b-tool.sh ended at $(date)" >> /config/service.log

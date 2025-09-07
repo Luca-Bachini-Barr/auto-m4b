@@ -3,6 +3,10 @@
 #file="/temp/mp3merge/auto-m4b-tool.sh"
 #cp -u /auto-m4b-tool.sh /temp/mp3merge/auto-m4b-tool.sh
 
+# Log the start of the script
+echo "runscript.sh started at $(date)" >> /config/service.log
+
+
 user_name="autom4b"
 user_id="1001"
 group_id="100"
@@ -41,3 +45,6 @@ if [[ -n "${PUID:-}" ]]; then
 fi
 
 ${cmd_prefix} /auto-m4b-tool.sh 2> /config/auto-m4b-tool.log
+
+# Log the end of the script
+echo "runscript.sh ended at $(date)" >> /config/service.log
